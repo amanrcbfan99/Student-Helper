@@ -1,3 +1,4 @@
+const { required } = require("joi")
 const mongoose = require(`mongoose`)
 
 
@@ -16,7 +17,9 @@ const registerSchema = mongoose.Schema({
     }
 })
 
-
 const registerModel = mongoose.model("students", registerSchema)
+
+
+
 
 module.exports = registerModel

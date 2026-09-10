@@ -23,7 +23,7 @@ const registerSchema = Joi.object({
     
 })
 
-function userValidation(req, res, next){
+function registerValidation(req, res, next){
 
     const {error} = registerSchema.validate(req.body)
 if(error){
@@ -38,6 +38,28 @@ if(error){
 }
 
 
+const loginSchema = Joi.object({
+    identifier : Joi.string()
+    .required()
+
+    ,
+
+    password : Joi.string()
+    .required()
+})
 
 
-module.exports = {userValidation}
+function loginValidation(req, res, next){
+    const {error} = loginSchema.validate(req.body)
+
+    if(error){
+        return res.status(400).json({
+            message: "Invalid Credentials"
+        })
+    }
+
+    next()
+}
+
+
+module.exports = {registerValidation, loginValidation}
