@@ -93,4 +93,22 @@ async function login(req, res){
 
 
 }
-module.exports = {register, login}
+
+async function logout(req, res){
+    
+    const token = req.cookies["login-token"]
+
+    if(!token){
+        res.status(400).json({
+            message : "You can't access this feature without logged in"
+        })
+    }
+
+    res.clearCookie("login-token")
+    
+    res.status(200).json({
+        message : "Logout Successfully"
+    })
+
+}
+module.exports = {register, login, logout}

@@ -7,5 +7,5 @@ const validation = require(`../middleware/student.validation`)
 
 router.post(`/register`,validation.registerValidation, studentController.register)
 router.post(`/login`, validation.loginValidation, studentController.login)
-
+router.post(`/logout`, studentController.logout)
 module.exports = router
