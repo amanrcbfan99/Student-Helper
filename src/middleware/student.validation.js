@@ -61,5 +61,8 @@ function loginValidation(req, res, next){
     next()
 }
 
+const resetPasswordSchema = Joi.object({
+    identifier: Joi.string().required()
+})
 
 module.exports = {registerValidation, loginValidation}

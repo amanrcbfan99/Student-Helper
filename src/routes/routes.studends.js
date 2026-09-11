@@ -2,10 +2,12 @@ const express = require(`express`)
 const router = express.Router()
 const studentController = require(`../controller/student.controller`)
 const validation = require(`../middleware/student.validation`)
+const auth = require(`../middleware/midddleware.student`)
 // const express = require(`express`)
 // const router = express.Router()
 
 router.post(`/register`,validation.registerValidation, studentController.register)
-router.post(`/login`, validation.loginValidation, studentController.login)
+router.post(`/login`, validation.loginValidation,auth.userAuth, studentController.login)
 router.post(`/logout`, studentController.logout)
+router.post(`/resetPassword`,auth.userAuth, studentController.resetPassword)
 module.exports = router

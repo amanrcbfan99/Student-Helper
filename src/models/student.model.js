@@ -14,6 +14,12 @@ const registerSchema = mongoose.Schema({
     password : {
         type : String,
         required : true
+    },
+    resetPasswordToken : {
+        type : String
+    },
+    resetPasswordExpiry : {
+        type : Date
     }
 })
 

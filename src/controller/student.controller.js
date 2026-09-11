@@ -2,6 +2,8 @@ const registerModel = require(`../models/student.model`)
 const jwt = require(`jsonwebtoken`)
 const bcrypt = require(`bcrypt`)
 const validation = require(`../middleware/student.validation`)
+const crypto = require("crypto")
+const nodemailer = require("nodemailer")
 
 async function register(req, res){
 
@@ -53,24 +55,6 @@ async function register(req, res){
 
 async function login(req, res){
 
-    const {identifier, password} = req.body
-
-
-        const user = await registerModel.findOne({
-        $or: [
-        { username: identifier },
-        { email: identifier }
-    ]
-        })
-
-        if(!user){
-            return res.status(409).json({
-            message : "User does't exists"
-        })
-        }
-        
-
-
     const isPasswordValid = await bcrypt.compare(password, user.password)
     
     if(!isPasswordValid){
@@ -111,4 +95,37 @@ async function logout(req, res){
     })
 
 }
-module.exports = {register, login, logout}
+
+
+async function resetPassword(req, res){
+
+    const {identifier} = req.body
+
+    const user = await registerModel.findOne({
+        $or : [
+            {email : identifier}
+            , {username : identifier}
+        ]
+    })
+
+    if(!user){
+        return res.status(400).json({
+            message : "User not found"
+        })
+    }
+
+    const temporarytoken = crypto.randomBytes(32).toString("hex")
+
+    const hashToken = await crypto.createHash("sha256").update(temporarytoken).digest("hex")
+    const expiry = new Date(Date.now() + 10 * 60 * 1000)
+
+
+    user.resetPasswordToken = hashToken
+    user.resetPasswordExpiry = expiry
+    await user.save()
+    
+    
+    //we have to create a token, hash it, send to the identifier.email, user will resent it, i have to compare my hashed token to users submitted token, if true user have to enter and confirt password, i have to hash it and save as password of ref of user
+
+}
+module.exports = {register, login, logout , resetPassword }
