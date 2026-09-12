@@ -240,4 +240,36 @@ async function getProfile(req, res){
         },
     })
 }
-module.exports = {register, login, logout , resetPassword, resetPasswordVerification, changePassword, getProfile}
+
+async function updateProfile(req, res){
+
+    const userId = req.user.id
+    const {newUserName, password} = req.body
+
+    const user = await registerModel.findById(userId)
+    const isPasswordValid = await bcrypt.compare(password, user.password)
+
+    if(!isPasswordValid){
+        return res.status(401).json({
+            message : "Incorrect Password Entered"
+        })
+    }
+
+    const usernameAvailOrNot = await registerModel.findOne({
+        username : newUserName
+    })
+
+    if(usernameAvailOrNot){
+        return res.status(400).json({
+            message : "Username already taken"
+        })
+    }
+
+    user.username = newUserName
+    await user.save()
+
+    res.status(201).json({
+        message : "Username Changes Successfully"
+    })
+}
+module.exports = {register, login, logout , resetPassword, resetPasswordVerification, changePassword, getProfile, updateProfile}
