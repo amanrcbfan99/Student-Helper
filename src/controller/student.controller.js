@@ -50,6 +50,8 @@ async function register(req, res){
             id : user._id
         }
     })
+
+
 }
 
 
@@ -115,7 +117,7 @@ async function resetPassword(req, res){
     }
 
     const temporarytoken = crypto.randomBytes(32).toString("hex")
-
+    const resetLink = `http://localhost:3000/auth/resetPassword?token=${temporarytoken}`
     const hashToken = await crypto.createHash("sha256").update(temporarytoken).digest("hex")
     const expiry = new Date(Date.now() + 10 * 60 * 1000)
 
@@ -124,7 +126,37 @@ async function resetPassword(req, res){
     user.resetPasswordExpiry = expiry
     await user.save()
     
-    
+
+    const transporter = await nodemailer.createTransport({
+    host: "smtp-relay.brevo.com",
+    port: 587,
+    secure: false,
+
+    auth: {
+        user: process.env.BREVO_SMTP_USER,
+        pass: process.env.BREVO_SMTP_KEY
+    }
+})
+
+await transporter.sendMail({
+    from : "amankumarkashyap249@gmail.com",
+    to : user.email,
+    subject : "Welcome",
+    text : `Hello,
+
+                We received a request to reset your Student Hub password.
+
+                Click the link below to create a new password:
+
+                ${resetLink}
+
+                This link will expire in 10 minutes.
+
+                If you did not request a password reset, you can safely ignore this email.
+
+            Regards,
+            Student Hub Team`
+})
     //we have to create a token, hash it, send to the identifier.email, user will resent it, i have to compare my hashed token to users submitted token, if true user have to enter and confirt password, i have to hash it and save as password of ref of user
 
 }
