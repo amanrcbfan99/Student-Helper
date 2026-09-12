@@ -6,7 +6,7 @@ async function userAuth(req, res, next){
     
     const {identifier} = req.body
 
-    const user = registerModel.findOne({
+    const user = await registerModel.findOne({
         $or : [
             { email: identifier },
             { username: identifier }
@@ -18,7 +18,7 @@ async function userAuth(req, res, next){
             message : "User does't exists"
         })
     }
-
+    req.user = user
     next()
 }
 

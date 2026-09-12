@@ -10,4 +10,5 @@ router.post(`/register`,validation.registerValidation, studentController.registe
 router.post(`/login`, validation.loginValidation,auth.userAuth, studentController.login)
 router.post(`/logout`, studentController.logout)
 router.post(`/resetPassword`,auth.userAuth, studentController.resetPassword)
+router.post(`/resetPasswordVerification`, studentController.resetPasswordVerification)
 module.exports = router

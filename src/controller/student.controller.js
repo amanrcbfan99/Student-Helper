@@ -54,8 +54,10 @@ async function register(req, res){
 
 }
 
-
 async function login(req, res){
+
+    const { password } = req.body
+    const user = req.user
 
     const isPasswordValid = await bcrypt.compare(password, user.password)
     
@@ -139,7 +141,7 @@ async function resetPassword(req, res){
 })
 
 await transporter.sendMail({
-    from : "amankumarkashyap249@gmail.com",
+    from : process.env.SENDER_EMAIL,
     to : user.email,
     subject : "Welcome",
     text : `Hello,
@@ -158,6 +160,39 @@ await transporter.sendMail({
             Student Hub Team`
 })
     //we have to create a token, hash it, send to the identifier.email, user will resent it, i have to compare my hashed token to users submitted token, if true user have to enter and confirt password, i have to hash it and save as password of ref of user
-
+    res.status(200).json({
+        message : "Reset link sent to your registered email"
+    })
 }
-module.exports = {register, login, logout , resetPassword }
+
+async function resetPasswordVerification(req, res){
+    const {temporarytoken, newPassword} = req.body
+
+    const hashToken = crypto.createHash("sha256").update(temporarytoken).digest("hex")
+    const user = await registerModel.findOne({
+        resetPasswordToken : hashToken,
+        resetPasswordExpiry : {$gt: new Date()}
+    })    
+
+
+    if(!user){
+        return res.status(400).json({
+            message : "Invalid or expired reset token"
+        })
+    }
+
+    const newHashedPassword = await bcrypt.hash(newPassword, 10)
+    user.password = newHashedPassword
+
+    user.resetPasswordToken = undefined
+    user.resetPasswordExpiry = undefined
+
+    await user.save()
+
+    res.status(200).json({
+        message : "Password Reset successfully"
+    })
+}
+
+
+module.exports = {register, login, logout , resetPassword, resetPasswordVerification }
