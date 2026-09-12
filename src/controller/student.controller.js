@@ -272,4 +272,9 @@ async function updateProfile(req, res){
         message : "Username Changes Successfully"
     })
 }
-module.exports = {register, login, logout , resetPassword, resetPasswordVerification, changePassword, getProfile, updateProfile}
+
+async function resources(req, res){
+    const userId = req.user.id
+    
+}
+module.exports = {register, login, logout , resetPassword, resetPasswordVerification, changePassword, getProfile, updateProfile,resources}

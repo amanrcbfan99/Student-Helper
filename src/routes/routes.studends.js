@@ -14,4 +14,5 @@ router.post(`/resetPasswordVerification`, studentController.resetPasswordVerific
 router.post(`/changePassword`,auth.loggedInorNot, studentController.changePassword)
 router.get(`/profile`, auth.loggedInorNot, studentController.getProfile)
 router.patch(`/profile`, auth.loggedInorNot, studentController.updateProfile)
+router.get(`/resource`, auth.userAuth, studentController.resources)
 module.exports = router
