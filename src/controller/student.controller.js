@@ -195,4 +195,32 @@ async function resetPasswordVerification(req, res){
 }
 
 
-module.exports = {register, login, logout , resetPassword, resetPasswordVerification }
+async function changePassword(req, res){
+
+    const {oldPassword, newPassword} = req.body
+    const userId = req.user.id
+
+    const user = await registerModel.findOne({
+        _id : userId
+    })
+
+    const isPasswordValid = await bcrypt.compare(oldPassword, user.password)
+
+    if(!isPasswordValid){
+        return res.status(401).json({
+            message : "Incorrect Password Entered"
+        })
+    }
+
+    const hashNewPassword = await bcrypt.hash(newPassword, 10)
+
+    user.password = hashNewPassword
+    await user.save()
+
+    res.status(200).json({
+        message : "Password changed successfully"
+    })
+
+}
+
+module.exports = {register, login, logout , resetPassword, resetPasswordVerification, changePassword}

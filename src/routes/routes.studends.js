@@ -11,4 +11,5 @@ router.post(`/login`, validation.loginValidation,auth.userAuth, studentControlle
 router.post(`/logout`, studentController.logout)
 router.post(`/resetPassword`,auth.userAuth, studentController.resetPassword)
 router.post(`/resetPasswordVerification`, studentController.resetPasswordVerification)
+router.post(`/changePassword`,auth.loggedInorNot, studentController.changePassword)
 module.exports = router
