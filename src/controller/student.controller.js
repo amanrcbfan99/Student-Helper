@@ -223,4 +223,21 @@ async function changePassword(req, res){
 
 }
 
-module.exports = {register, login, logout , resetPassword, resetPasswordVerification, changePassword}
+
+async function getProfile(req, res){
+
+    const userId = req.user.id
+    const user = await registerModel.findOne({
+        _id : userId
+    })
+    
+    res.status(200).json({
+
+        message : "Profile fetched successfully",
+        user : {
+            username : user.username,
+            email : user.email,
+        },
+    })
+}
+module.exports = {register, login, logout , resetPassword, resetPasswordVerification, changePassword, getProfile}

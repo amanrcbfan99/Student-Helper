@@ -12,4 +12,5 @@ router.post(`/logout`, studentController.logout)
 router.post(`/resetPassword`,auth.userAuth, studentController.resetPassword)
 router.post(`/resetPasswordVerification`, studentController.resetPasswordVerification)
 router.post(`/changePassword`,auth.loggedInorNot, studentController.changePassword)
+router.get(`/profile`, auth.loggedInorNot, studentController.getProfile),
 module.exports = router
