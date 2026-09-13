@@ -1,15 +1,51 @@
-const { boolean } = require("joi")
-const mongoose = require(`mongoose`)
+const mongoose = require("mongoose")
 
-const resourceSchema = new mongoose.Schema({
-    title : String,
-    subject : String,
-    semseter : String,
-    type : String,
-    isPremium : boolean
-})
+const resourceSchema = new mongoose.Schema(
+    {
+        title: {
+            type: String,
+            required: true,
+            trim: true
+        },
 
+        description: {
+            type: String,
+            trim: true
+        },
 
-const resourceModel = mongoose.model("resources", resourceSchema)
+        subject: {
+            type: String,
+            required: true,
+            trim: true
+        },
 
-module.exports = resourceModel
+        semester: {
+            type: Number,
+            required: true
+        },
+
+        resourceType: {
+            type: String,
+            required: true,
+            trim: true
+        },
+
+        file: {
+            type: String,
+            required: true
+        },
+
+        uploadedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Student",
+            required: true
+        }
+    },
+    {
+        timestamps: true
+    }
+)
+
+const Resource = mongoose.model("Resource", resourceSchema)
+
+module.exports = Resource
