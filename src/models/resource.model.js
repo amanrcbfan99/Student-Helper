@@ -1,51 +1,14 @@
-const mongoose = require("mongoose")
+const mongoose = require(`mongoose`)
 
-const resourceSchema = new mongoose.Schema(
-    {
-        title: {
-            type: String,
-            required: true,
-            trim: true
-        },
+const resourceSchema = new mongoose.Schema({
+    title : String,
+    subject : String,
+    semeseter : String,
+    type : String,
+    isPremium : boolean
+})
 
-        description: {
-            type: String,
-            trim: true
-        },
 
-        subject: {
-            type: String,
-            required: true,
-            trim: true
-        },
+const resourceModel = mongoose.model("resources", resourceSchema)
 
-        semester: {
-            type: Number,
-            required: true
-        },
-
-        resourceType: {
-            type: String,
-            required: true,
-            trim: true
-        },
-
-        file: {
-            type: String,
-            required: true
-        },
-
-        uploadedBy: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Student",
-            required: true
-        }
-    },
-    {
-        timestamps: true
-    }
-)
-
-const Resource = mongoose.model("Resource", resourceSchema)
-
-module.exports = Resource
+module.exports = resourceModel

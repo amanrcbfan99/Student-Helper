@@ -1,96 +1,99 @@
-const Resource = require("../models/resource.model")
+// const Resource = require("../models/resource.model")
 
 
-async function uploadResource(req, res) {
+// async function uploadResource(req, res) {
 
-    try {
+//     try {
 
-        const {
-            title,
-            description,
-            subject,
-            semester,
-            resourceType
-        } = req.body
-
-
-        if (!req.file) {
-
-            return res.status(400).json({
-                message: "Resource file is required"
-            })
-        }
+//         const {
+//             title,
+//             description,
+//             subject,
+//             semester,
+//             resourceType
+//         } = req.body
 
 
-        const resource = await Resource.create({
+//         if (!req.file) {
 
-            title,
-            description,
-            subject,
-            semester,
-            resourceType,
-
-            file: req.file.path,
-
-            uploadedBy: req.user.id
-        })
+//             return res.status(400).json({
+//                 message: "Resource file is required"
+//             })
+//         }
 
 
-        res.status(201).json({
+//         const resource = await Resource.create({
 
-            message: "Resource uploaded successfully",
+//             title,
+//             description,
+//             subject,
+//             semester,
+//             resourceType,
 
-            resource
+//             file: req.file.path,
 
-        })
-
-    } catch (error) {
-
-        res.status(500).json({
-
-            message: "Resource upload failed",
-
-            error: error.message
-
-        })
-    }
-}
+//             uploadedBy: req.user.id
+//         })
 
 
-async function getResources(req, res) {
+//         res.status(201).json({
 
-    try {
+//             message: "Resource uploaded successfully",
 
-        const resources = await Resource.find()
-            .sort({
-                createdAt: -1
-            })
+//             resource
 
+//         })
 
-        res.status(200).json({
+//     } catch (error) {
 
-            message: "Resources fetched successfully",
+//         res.status(500).json({
 
-            totalResources: resources.length,
+//             message: "Resource upload failed",
 
-            resources
+//             error: error.message
 
-        })
-
-    } catch (error) {
-
-        res.status(500).json({
-
-            message: "Failed to fetch resources",
-
-            error: error.message
-
-        })
-    }
-}
+//         })
+//     }
+// }
 
 
-module.exports = {
-    uploadResource,
-    getResources
-}
+// async function getResources(req, res) {
+
+//     try {
+
+//         const resources = await Resource.find()
+//             .sort({
+//                 createdAt: -1
+//             })
+
+
+//         res.status(200).json({
+
+//             message: "Resources fetched successfully",
+
+//             totalResources: resources.length,
+
+//             resources
+
+//         })
+
+//     } catch (error) {
+
+//         res.status(500).json({
+
+//             message: "Failed to fetch resources",
+
+//             error: error.message
+
+//         })
+//     }
+// }
+
+
+// module.exports = {
+//     uploadResource,
+//     getResources
+// }
+
+
+

@@ -1,53 +1,53 @@
-const multer = require("multer")
-const path = require("path")
+// const multer = require("multer")
+// const path = require("path")
 
-const storage = multer.diskStorage({
+// const storage = multer.diskStorage({
 
-    destination: function (req, file, cb) {
+//     destination: function (req, file, cb) {
 
-        cb(null, "uploads/resources")
-    },
+//         cb(null, "uploads/resources")
+//     },
 
-    filename: function (req, file, cb) {
+//     filename: function (req, file, cb) {
 
-        const uniqueName =
-            Date.now() + "-" + Math.round(Math.random() * 1e9)
+//         const uniqueName =
+//             Date.now() + "-" + Math.round(Math.random() * 1e9)
 
-        const extension = path.extname(file.originalname)
+//         const extension = path.extname(file.originalname)
 
-        cb(null, uniqueName + extension)
-    }
-})
-
-
-const fileFilter = function (req, file, cb) {
-
-    const allowedTypes = [
-        "application/pdf"
-    ]
-
-    if (allowedTypes.includes(file.mimetype)) {
-
-        cb(null, true)
-
-    } else {
-
-        cb(new Error("Only PDF files are allowed"), false)
-    }
-}
+//         cb(null, uniqueName + extension)
+//     }
+// })
 
 
-const uploadResource = multer({
+// const fileFilter = function (req, file, cb) {
 
-    storage: storage,
+//     const allowedTypes = [
+//         "application/pdf"
+//     ]
 
-    fileFilter: fileFilter,
+//     if (allowedTypes.includes(file.mimetype)) {
 
-    limits: {
-        fileSize: 10 * 1024 * 1024
-    }
+//         cb(null, true)
 
-})
+//     } else {
+
+//         cb(new Error("Only PDF files are allowed"), false)
+//     }
+// }
 
 
-module.exports = uploadResource
+// const uploadResource = multer({
+
+//     storage: storage,
+
+//     fileFilter: fileFilter,
+
+//     limits: {
+//         fileSize: 10 * 1024 * 1024
+//     }
+
+// })
+
+
+// module.exports = uploadResource
