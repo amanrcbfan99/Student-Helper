@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
 const adminSchema = new mongoose.Schema({
-    
+
     name :{
         type : String,
         required : true,
@@ -9,22 +9,25 @@ const adminSchema = new mongoose.Schema({
     email : {
         type : String,
         required : true,
+        unique : true
     },
     password :{
         type : String,
         required : true,
     },
+    role : {
+        type : String
+    },
     isActive :{
-        type : boolean,
+        type : Boolean,
 
     },
-    toFactorEnabled :{
-        type : boolean,
-    },
-    timestamps :{
-        
+    twoFactorEnabled :{
+        type : Boolean,
     }
 
+}, {
+    timestamps : true
 })
 
 const adminModel = mongoose.model("Admin", adminSchema)
