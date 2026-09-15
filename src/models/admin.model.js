@@ -24,6 +24,14 @@ const adminSchema = new mongoose.Schema({
     },
     twoFactorEnabled :{
         type : Boolean,
+    },
+    failedAttempts  : {
+        type : Number,
+        default : 0
+    },
+    lockedUltil : {
+        type : Date,
+        default : null
     }
 
 }, {
