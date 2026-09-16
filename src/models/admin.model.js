@@ -28,10 +28,6 @@ const adminSchema = new mongoose.Schema({
     failedAttempts  : {
         type : Number,
         default : 0
-    },
-    lockedUltil : {
-        type : Date,
-        default : null
     }
 
 }, {

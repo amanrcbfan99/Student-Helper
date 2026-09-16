@@ -9,7 +9,7 @@ const studentLoginLimiter = rateLimit({
 })
 
 const adminLoginlimiter = rateLimit({
-    windowMs : 10*60*1000,
+    windowMs : 1*60*1000,
     limit : 3,
     message: {
         message : "To many login attempts, please try again later"
