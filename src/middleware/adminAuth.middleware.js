@@ -16,7 +16,7 @@ async function adminAuth(req, res, next){
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         req.admin = decoded
 
-
+        //Admn still ative or not
         const admin = await adminModel.findById(decoded.id)
         if(!admin){
             return res.status(401).json({

@@ -2,6 +2,7 @@ const adminModel = require(`../models/admin.model`)
 const bcrypt = require("bcrypt")
 const nodemailer = require("nodemailer")
 const jwt = require(`jsonwebtoken`)
+const studentModel = require(`../models/student.model`)
 
 async function adminInitialization(){
 
@@ -117,4 +118,22 @@ async function adminLogin(req, res){
 
 }
 
-module.exports = {adminInitialization, adminLogin};
+
+async function getAllstudents(req, res){
+
+    const limit = req.query.limit || 10
+    const skip = req.query.skip || 0
+    if(limit > 10){
+        res.status(400).json({
+            message : "Maximum 10 students can be fetched at once"
+        })
+    }
+    const students = await studentModel.find().limit(limit).skip(skip)
+
+    res.status(200).json({
+        message : "Students fetched successfully",
+        students
+    })
+}
+
+module.exports = {adminInitialization, adminLogin, getAllstudents};
