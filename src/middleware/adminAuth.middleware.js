@@ -1,24 +1,38 @@
 const jwt = require(`jsonwebtoken`)
-
+const adminModel = require("../models/admin.model")
 async function adminAuth(req, res, next){
 
-    const token = req.cookies["Admin-Login-token"]
+    //Admin authorization
+    try{
 
-    if(!token){
-        return res.status(409).json({
-            message : "Unauthorized Access"
+        const token = req.cookies["Admin-Login-token"]
+        if(!token){
+            return res.status(401).json({
+                message : "Unauthorized"
+            })
+        }
+
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        req.admin = decoded
+
+
+        const admin = await adminModel.findById(decoded.id)
+        if(!admin){
+            return res.status(401).json({
+                message : "Unauthorized"
+            })
+        }
+        next()
+
+
+    } catch (error){
+        return res.status(401).json({
+            message : error.message
         })
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    if(!decoded){
-        return res.status(409).json({
-            message : "Invalid or expired token"
-        })
-    }
-    
-    req.admin = decoded
-
-    next()
     
 }
+
+module.exports = {adminAuth}
