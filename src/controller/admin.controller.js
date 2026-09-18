@@ -195,6 +195,8 @@ async function suspendStudent(req, res){
         res.status(200).json({
             message : "User suspended successfully"
         })
+
+        
     } catch(error){
         res.status(500).json({
             error
@@ -202,4 +204,4 @@ async function suspendStudent(req, res){
     }
 }
 
-module.exports = {adminInitialization, adminLogin, getAllstudents, getSpecificStudent};
+module.exports = {adminInitialization, adminLogin, getAllstudents, getSpecificStudent, suspendStudent};
