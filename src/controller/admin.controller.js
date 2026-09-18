@@ -123,12 +123,26 @@ async function getAllstudents(req, res){
 
     const limit = req.query.limit || 10
     const skip = req.query.skip || 0
+    const search = req.query.search
     if(limit > 10){
         res.status(400).json({
             message : "Maximum 10 students can be fetched at once"
         })
     }
-    const students = await studentModel.find().limit(limit).skip(skip)
+    const students = await studentModel.find({
+        $or : [
+            {username : {
+            $regex : search,
+            $options : "i"
+        }},
+        {email : {
+            $regex : search,
+            $options : "i"
+        }}
+        ]
+    })
+    .limit(limit)
+    .skip(skip)
 
     res.status(200).json({
         message : "Students fetched successfully",
