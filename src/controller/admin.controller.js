@@ -271,4 +271,35 @@ async function deleteStudent(req, res){
 
 
 }
-module.exports = {adminInitialization, adminLogin, getAllstudents, getSpecificStudent, suspendStudent, activateStudent, deleteStudent};
+
+async function countStudent(req, res){
+    
+
+    try{
+
+        //Total students
+        const allStudent = await studentModel.countDocuments()
+
+        //Active students
+        const activeStudents = await studentModel.countDocuments({
+            "isSuspended" : false
+        })
+
+        //Suspended Students
+        const suspendedStudents = await studentModel.countDocuments({
+            "isSuspended" : true
+        })
+
+        res.status(200).json({
+            Total_Students : allStudent,
+            Active_Students : activeStudents,
+            Suspended_Students : suspendedStudents
+        })
+
+    } catch(error){
+        res.status(500).json({
+            error
+        })
+    }
+}
+module.exports = {adminInitialization, adminLogin, getAllstudents, getSpecificStudent, suspendStudent, activateStudent, deleteStudent, countStudent};
