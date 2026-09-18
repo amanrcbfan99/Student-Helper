@@ -125,7 +125,7 @@ async function getAllstudents(req, res){
     const skip = req.query.skip || 0
     const search = req.query.search
     if(limit > 10){
-        res.status(400).json({
+        return res.status(400).json({
             message : "Maximum 10 students can be fetched at once"
         })
     }
@@ -150,4 +150,30 @@ async function getAllstudents(req, res){
     })
 }
 
-module.exports = {adminInitialization, adminLogin, getAllstudents};
+
+async function getSpecificStudent(req, res){
+
+    const id = req.params.id
+    try {
+        const user = await studentModel.findById(id)
+        if(!user){
+            return res.status(404).json({
+                message : "User Not Found"
+            })
+        }
+
+        res.status(200).json({
+            message : "User fetched successflly",
+            user
+        })
+
+        
+    } catch (error){
+        res.status(500).json({
+            error
+        })
+    }
+    
+
+}
+module.exports = {adminInitialization, adminLogin, getAllstudents, getSpecificStudent};
