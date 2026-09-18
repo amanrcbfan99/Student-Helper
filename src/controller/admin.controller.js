@@ -196,7 +196,7 @@ async function suspendStudent(req, res){
             message : "User suspended successfully"
         })
 
-        
+
     } catch(error){
         res.status(500).json({
             error
@@ -204,4 +204,45 @@ async function suspendStudent(req, res){
     }
 }
 
-module.exports = {adminInitialization, adminLogin, getAllstudents, getSpecificStudent, suspendStudent};
+async function activateStudent(req, res){
+
+    try{
+
+    const id = req.params.id
+
+    //Finding User
+    const user = await studentModel.findById(id)
+
+    //If user did not exists
+    if(!user){
+        return res.status(404).json({
+            message : "User not found"
+        })
+    }
+        
+    //If account already active
+    if(user.isSuspended === false){
+            return res.status(401).json({
+                message : "User's account is already active"
+            })
+    }
+
+    user.isSuspended = false
+    await user.save()
+
+    res.status(200).json({
+        message : "User activated successfully"
+    })
+    }
+
+    //Error handling
+    catch(error){
+        res.status(500).json({
+            error
+        })
+    }
+
+    
+}
+
+module.exports = {adminInitialization, adminLogin, getAllstudents, getSpecificStudent, suspendStudent, activateStudent};
