@@ -245,4 +245,30 @@ async function activateStudent(req, res){
     
 }
 
-module.exports = {adminInitialization, adminLogin, getAllstudents, getSpecificStudent, suspendStudent, activateStudent};
+async function deleteStudent(req, res){
+
+   try{
+
+    const id = req.params.id
+    const user = await studentModel.findById(id)
+
+    if(!user){
+        return res.status(404).json({
+            message : "User not found"
+        })
+    }
+
+    await studentModel.findByIdAndDelete(id)
+
+    res.status(200).json({
+        message : "User deleted successfully"
+    })
+   }
+   
+   catch(error){
+    res.status(500).json(error)
+   }
+
+
+}
+module.exports = {adminInitialization, adminLogin, getAllstudents, getSpecificStudent, suspendStudent, activateStudent, deleteStudent};
