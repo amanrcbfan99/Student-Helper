@@ -24,7 +24,7 @@ async function userAuth(req, res, next){
 
 async function  loggedInorNot(req, res, next){
 
-try{
+try{ //Fetching Token
     const token = req.cookies["login-token"]
 
     if(!token){
@@ -33,7 +33,21 @@ try{
         })
     }
 
+    //Token Validation
     const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET)
+
+    //suspended or not
+    const user = await studentModel.findById(decoded.id)
+    if(!user){
+        return res.status(404).json({
+            message : "User Not Found"
+        })
+    }
+    if(user.isSuspended === true){
+        return res.status(403).json({
+            message : "Your account is temporary suspend due to some reason, Please contact support to activate."
+        })
+    }
     req.user = decoded
     next()
 }

@@ -21,7 +21,7 @@ const registerSchema = mongoose.Schema({
     resetPasswordExpiry : {
         type : Date
     },
-    idSuspended : {
+    isSuspended : {
         type : Boolean,
         default : false
     }
