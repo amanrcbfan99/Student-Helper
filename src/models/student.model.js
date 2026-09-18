@@ -20,6 +20,10 @@ const registerSchema = mongoose.Schema({
     },
     resetPasswordExpiry : {
         type : Date
+    },
+    idSuspended : {
+        type : Boolean,
+        default : false
     }
 })
 

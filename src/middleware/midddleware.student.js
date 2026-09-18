@@ -23,24 +23,26 @@ async function userAuth(req, res, next){
 }
 
 async function  loggedInorNot(req, res, next){
+
+try{
     const token = req.cookies["login-token"]
 
     if(!token){
-        res.status(409).json({
+        return res.status(401).json({
             message : "Signup first"
         })
     }
 
-    const decoded = await jsonwebtoken.verify(token, process.env.JWT_SECRET)
-    if(!decoded){
-        return res.status(401).json({
-            message : "Unauthorized Token"
+    const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET)
+    req.user = decoded
+    next()
+}
+    catch(error){
+        res.status(500).json({
+            error
         })
     }
 
-    req.user = decoded
-
-    next()
 }
 
 module.exports = {userAuth, loggedInorNot}
