@@ -176,4 +176,30 @@ async function getSpecificStudent(req, res){
     
 
 }
+
+async function suspendStudent(req, res){
+    
+    
+    try{
+        const id = req.params.id
+
+        const user = await studentModel.findById(id)
+        if(!user){
+            return res.status(404).json({
+                message : "User not found"
+            })
+        }
+
+        user.isSuspended = true
+        await user.save()
+        res.status(200).json({
+            message : "User suspended successfully"
+        })
+    } catch(error){
+        res.status(500).json({
+            error
+        })
+    }
+}
+
 module.exports = {adminInitialization, adminLogin, getAllstudents, getSpecificStudent};
