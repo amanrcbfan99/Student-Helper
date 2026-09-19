@@ -5,6 +5,7 @@ const pyqSchema = new mongoose.Schema({
     subject : String,
     semester : String,
     type : String,
+    fileUrl : String,
     isPremium : {
         type : Boolean,
         default : false
@@ -14,4 +15,4 @@ const pyqSchema = new mongoose.Schema({
 
 const pyqModel = mongoose.model("pyq", pyqSchema)
 
-module.exports = pyqModel
+module.exports = {pyqModel}

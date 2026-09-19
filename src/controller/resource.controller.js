@@ -1,99 +1,48 @@
-// const Resource = require("../models/resource.model")
+const { pyqModel } = require(`../models/resource.model`)
+const ImageKit = require("@imagekit/nodejs")
 
+async function uploadPyq(req, res){
 
-// async function uploadResource(req, res) {
+    try{
 
-//     try {
+    const {title,subject, semester, type, isPremium} = req.body
+    const file = req.file
 
-//         const {
-//             title,
-//             description,
-//             subject,
-//             semester,
-//             resourceType
-//         } = req.body
+    //imagekit initilization
+    const client = new ImageKit({
+        privateKey : process.env.IMAGEKIT_PRIVATE_KEY
+    })
+    
+    //upload
+    const result = await client.files.upload({
+    file : file.buffer.toString("base64"),
+    fileName : file.originalname
+})
 
+    const fileUrl = result.url
 
-//         if (!req.file) {
+    const pyq = await pyqModel.create({
+        title,
+        subject,
+        semester,
+        type,
+        isPremium,
+        fileUrl
+    })
 
-//             return res.status(400).json({
-//                 message: "Resource file is required"
-//             })
-//         }
+    res.status(201).json({
+        message : "File uploaded successfully"
+    })
+    } catch(error){
+    console.log("IMAGEKIT ERROR:", error)
 
+    res.status(500).json({
+        message: error.message,
+        name: error.name,
+        stack: error.stack
+    })
+}
 
-//         const resource = await Resource.create({
+}
 
-//             title,
-//             description,
-//             subject,
-//             semester,
-//             resourceType,
-
-//             file: req.file.path,
-
-//             uploadedBy: req.user.id
-//         })
-
-
-//         res.status(201).json({
-
-//             message: "Resource uploaded successfully",
-
-//             resource
-
-//         })
-
-//     } catch (error) {
-
-//         res.status(500).json({
-
-//             message: "Resource upload failed",
-
-//             error: error.message
-
-//         })
-//     }
-// }
-
-
-// async function getResources(req, res) {
-
-//     try {
-
-//         const resources = await Resource.find()
-//             .sort({
-//                 createdAt: -1
-//             })
-
-
-//         res.status(200).json({
-
-//             message: "Resources fetched successfully",
-
-//             totalResources: resources.length,
-
-//             resources
-
-//         })
-
-//     } catch (error) {
-
-//         res.status(500).json({
-
-//             message: "Failed to fetch resources",
-
-//             error: error.message
-
-//         })
-//     }
-// }
-
-
-// module.exports = {
-//     uploadResource,
-//     getResources
-// }
-
-
-
+module.exports = {uploadPyq}

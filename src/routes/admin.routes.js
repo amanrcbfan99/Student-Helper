@@ -3,8 +3,8 @@ const router = express.Router()
 const adminController = require(`../controller/admin.controller`)
 const loginlimiter = require(`../middleware/rateLimiter.middleware`)
 const adminAuthentication = require(`../middleware/adminAuth.middleware`)
-const uploadMiddleware = require(`../middleware/resource.middleware`)
-
+const uploadMiddleware = require(`../middleware/upload.middleware`)
+const resourceController = require(`../controller/resource.controller`)
 
 router.post(`/login`,loginlimiter.adminLoginlimiter, adminController.adminLogin)
 router.get(`/students/count`, adminAuthentication.adminAuth, adminController.countStudent)
@@ -13,5 +13,5 @@ router.get(`/students/:id`, adminAuthentication.adminAuth, adminController.getSp
 router.patch(`/students/suspend/:id`, adminAuthentication.adminAuth, adminController.suspendStudent)
 router.patch(`/students/activate/:id`, adminAuthentication.adminAuth, adminController.activateStudent)
 router.delete(`/students/delete/:id`, adminAuthentication.adminAuth, adminController.deleteStudent)
-router.post(`/upload/pyq`, adminAuthentication.adminAuth, uploadMiddleware.upload.single("file"))
+router.post(`/upload/pyq`, adminAuthentication.adminAuth, uploadMiddleware.upload.single("file"), resourceController.uploadPyq)
 module.exports = router
