@@ -1,14 +1,17 @@
 const mongoose = require(`mongoose`)
 
-const resourceSchema = new mongoose.Schema({
+const pyqSchema = new mongoose.Schema({
     title : String,
     subject : String,
-    semeseter : String,
+    semester : String,
     type : String,
-    isPremium : boolean
+    isPremium : {
+        type : Boolean,
+        default : false
+    }
 })
 
 
-const resourceModel = mongoose.model("resources", resourceSchema)
+const pyqModel = mongoose.model("pyq", pyqSchema)
 
-module.exports = resourceModel
+module.exports = pyqModel
