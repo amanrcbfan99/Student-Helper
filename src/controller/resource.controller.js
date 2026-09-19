@@ -1,6 +1,7 @@
 const { pyqModel } = require(`../models/resource.model`)
 const ImageKit = require("@imagekit/nodejs")
 
+
 async function uploadPyq(req, res){
 
     try{
@@ -45,4 +46,70 @@ async function uploadPyq(req, res){
 
 }
 
-module.exports = {uploadPyq}
+async function getPyq(req, res){
+
+    console.log("GET PYQ CONTROLLER HIT")
+    try{
+    
+    const limit = req.query.limit || 10
+    const skip = req.query.skip || 0
+    const search = req.query.search
+    
+    let result;
+    if(!search){
+        result = await pyqModel.find()
+        
+        .limit(limit)
+        .skip(skip)
+    }
+
+    else {result = await pyqModel.find({
+
+        $or : [
+            {semester : {
+            $regex : search,
+            $options : "i"
+            }},
+            
+            {subject : {
+            $regex : search,
+            $options : "i"
+            }},
+
+            {title : {
+            $regex : search,
+            $options : "i"
+            }}
+
+        ]
+
+    })
+        
+        .limit(limit)
+        .skip(skip)}
+
+
+    
+
+    if(result.length < 1){
+
+        return res.status(404).json({
+            message : "No matching resources found"
+        })
+
+    }
+
+    res.status(200).json({
+        message : "Resources fetched successfully",
+        result
+    })}
+    catch(error){
+        res.status(500).json({
+            error
+        })
+    }
+
+}
+module.exports = {uploadPyq, getPyq}
+
+

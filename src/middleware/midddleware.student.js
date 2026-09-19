@@ -1,6 +1,6 @@
 const jsonwebtoken = require(`jsonwebtoken`)
 const registerModel = require(`../models/student.model`)
-
+const jwt = require(`jsonwebtoken`)
 
 async function userAuth(req, res, next){
     
@@ -72,4 +72,46 @@ try{ //Fetching Token
 
 }
 
-module.exports = {userAuth, loggedInorNot}
+async function  checkCurrentUser(req, res, next){
+
+    
+    try{
+
+    const token = req.cookies["login-token"]
+    if(!token){
+        return res.status(401).json({
+            message : "unauthorized"
+        })
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    if(!decoded){
+        return res.status(401).json({
+            message : "unauthorized"
+        })
+    }
+
+    const user = await registerModel.findById(decoded.id)
+    if(!user){
+        return res.status(401).json({
+            message : "You are no longer permitable to access these features"
+        })
+    }
+    if(user.isSuspended === true){
+        return res.status(401).json({
+            message : "your account is temporary suspended, please contact our support team"
+        })
+
+        
+    }
+    next()
+}
+
+    catch(error){
+        res.status(500).json({
+            error
+        })
+    }
+
+}
+module.exports = {userAuth, loggedInorNot, checkCurrentUser}
