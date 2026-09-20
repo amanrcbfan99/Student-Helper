@@ -49,67 +49,85 @@ async function uploadPyq(req, res){
 async function getPyq(req, res){
 
     console.log("GET PYQ CONTROLLER HIT")
-    try{
-    
-    const limit = req.query.limit || 10
-    const skip = req.query.skip || 0
-    const search = req.query.search
-    
-    let result;
-    if(!search){
-        result = await pyqModel.find()
-        
-        .limit(limit)
-        .skip(skip)
-    }
 
-    else {result = await pyqModel.find({
+    try {
 
-        $or : [
-            {semester : {
-            $regex : search,
-            $options : "i"
-            }},
-            
-            {subject : {
-            $regex : search,
-            $options : "i"
-            }},
+        const limit = req.query.limit || 10
+        const skip = req.query.skip || 0
 
-            {title : {
-            $regex : search,
-            $options : "i"
-            }}
+        const search = req.query.search
+        const subject = req.query.subject
+        const semester = req.query.semester
+        const type = req.query.type
+        const isPremium = req.query.isPremium
 
-        ]
+        let query = {}
 
-    })
-        
-        .limit(limit)
-        .skip(skip)}
+        // Exact filters
+        if(subject){
+            query.subject = subject
+        }
 
+        if(semester){
+            query.semester = semester
+        }
 
-    
+        if(type){
+            query.type = type
+        }
 
-    if(result.length < 1){
+        if(isPremium){
+            query.isPremium = isPremium
+        }
 
-        return res.status(404).json({
-            message : "No matching resources found"
+        // Search
+        if(search){
+            query.$or = [
+                {
+                    semester : {
+                        $regex : search,
+                        $options : "i"
+                    }
+                },
+                {
+                    subject : {
+                        $regex : search,
+                        $options : "i"
+                    }
+                },
+                {
+                    title : {
+                        $regex : search,
+                        $options : "i"
+                    }
+                }
+            ]
+        }
+
+        const result = await pyqModel.find(query)
+            .limit(limit)
+            .skip(skip)
+
+        if(result.length < 1){
+            return res.status(404).json({
+                message : "No matching resources found"
+            })
+        }
+
+        res.status(200).json({
+            message : "Resources fetched successfully",
+            result
         })
 
     }
-
-    res.status(200).json({
-        message : "Resources fetched successfully",
-        result
-    })}
     catch(error){
         res.status(500).json({
             error
         })
     }
-
 }
+
+
 module.exports = {uploadPyq, getPyq}
 
 
