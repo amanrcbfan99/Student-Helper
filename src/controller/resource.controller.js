@@ -203,6 +203,32 @@ async function updatePyq(req, res){
 
     }
 }
-module.exports = {uploadPyq, getPyq, downloadPyq, updatePyq}
+async function deletePyq(req, res){
+
+    try {
+
+        const { id } = req.params
+
+        const pyq = await pyqModel.findByIdAndDelete(id)
+
+        if(!pyq){
+            return res.status(404).json({
+                message : "Resource not found"
+            })
+        }
+
+        res.status(200).json({
+            message : "Resource deleted successfully"
+        })
+
+    } catch(error) {
+
+        res.status(500).json({
+            message : error.message
+        })
+
+    }
+}
+module.exports = {uploadPyq, getPyq, downloadPyq, updatePyq, deletePyq}
 
 

@@ -11,4 +11,10 @@ router.patch(
     adminAuthentication.adminAuth,
     resourceController.updatePyq
 )
+
+router.delete(
+    `/pyq/:id`,
+    adminAuthentication.adminAuth,
+    resourceController.deletePyq
+)
 module.exports = router
