@@ -152,6 +152,57 @@ async function downloadPyq(req, res){
     }
 }
 
-module.exports = {uploadPyq, getPyq, downloadPyq}
+async function updatePyq(req, res){
+
+    try {
+
+        const { id } = req.params
+
+        const { title, subject, semester, type, isPremium } = req.body
+
+        const pyq = await pyqModel.findById(id)
+
+        if(!pyq){
+            return res.status(404).json({
+                message : "Resource not found"
+            })
+        }
+
+        if(title !== undefined){
+            pyq.title = title
+        }
+
+        if(subject !== undefined){
+            pyq.subject = subject
+        }
+
+        if(semester !== undefined){
+            pyq.semester = semester
+        }
+
+        if(type !== undefined){
+            pyq.type = type
+        }
+
+        if(isPremium !== undefined){
+            pyq.isPremium = isPremium
+        }
+
+        await pyq.save()
+
+        res.status(200).json({
+            message : "Resource updated successfully",
+            pyq
+        })
+
+    } catch(error) {
+
+        res.status(500).json({
+            message : error.message
+        })
+
+    }
+}
+module.exports = {uploadPyq, getPyq, downloadPyq, updatePyq}
 
 

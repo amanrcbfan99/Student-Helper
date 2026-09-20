@@ -6,4 +6,9 @@ const resourceController = require(`../controller/resource.controller`)
 router.get(`/pyq`, auth.checkCurrentUser, resourceController.getPyq)
 router.get(`/pyq/:id/download`,auth.checkCurrentUser,resourceController.downloadPyq)
 
+router.patch(
+    `/pyq/:id`,
+    adminAuthentication.adminAuth,
+    resourceController.updatePyq
+)
 module.exports = router
