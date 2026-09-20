@@ -127,7 +127,31 @@ async function getPyq(req, res){
     }
 }
 
+async function downloadPyq(req, res){
 
-module.exports = {uploadPyq, getPyq}
+    try {
+
+        const { id } = req.params
+
+        const pyq = await pyqModel.findById(id)
+
+        if(!pyq){
+            return res.status(404).json({
+                message : "Resource not found"
+            })
+        }
+
+        res.redirect(pyq.fileUrl)
+
+    } catch(error){
+
+        res.status(500).json({
+            message : error.message
+        })
+
+    }
+}
+
+module.exports = {uploadPyq, getPyq, downloadPyq}
 
 
