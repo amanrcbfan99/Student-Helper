@@ -1,3 +1,4 @@
+const { resource } = require("../app")
 const { pyqModel } = require(`../models/resource.model`)
 const ImageKit = require("@imagekit/nodejs")
 
@@ -127,108 +128,34 @@ async function getPyq(req, res){
     }
 }
 
+
+
 async function downloadPyq(req, res){
 
-    try {
+    try{
 
-        const { id } = req.params
+    const id = req.params.id
+    const resource = await pyqModel.findById(id)
 
-        const pyq = await pyqModel.findById(id)
-
-        if(!pyq){
-            return res.status(404).json({
-                message : "Resource not found"
-            })
-        }
-
-        res.redirect(pyq.fileUrl)
-
-    } catch(error){
-
-        res.status(500).json({
-            message : error.message
+    if(!resource){
+        return res.status(404).json({
+            message : "Resource not found"
         })
-
     }
+
+    res.redirect(resource.fileUrl)
+    }
+
+    catch(error){
+    console.log(error)
+
+    res.status(500).json({
+        message: error.message
+    })
 }
 
-async function updatePyq(req, res){
-
-    try {
-
-        const { id } = req.params
-
-        const { title, subject, semester, type, isPremium } = req.body
-
-        const pyq = await pyqModel.findById(id)
-
-        if(!pyq){
-            return res.status(404).json({
-                message : "Resource not found"
-            })
-        }
-
-        if(title !== undefined){
-            pyq.title = title
-        }
-
-        if(subject !== undefined){
-            pyq.subject = subject
-        }
-
-        if(semester !== undefined){
-            pyq.semester = semester
-        }
-
-        if(type !== undefined){
-            pyq.type = type
-        }
-
-        if(isPremium !== undefined){
-            pyq.isPremium = isPremium
-        }
-
-        await pyq.save()
-
-        res.status(200).json({
-            message : "Resource updated successfully",
-            pyq
-        })
-
-    } catch(error) {
-
-        res.status(500).json({
-            message : error.message
-        })
-
-    }
+        
 }
-async function deletePyq(req, res){
-
-    try {
-
-        const { id } = req.params
-
-        const pyq = await pyqModel.findByIdAndDelete(id)
-
-        if(!pyq){
-            return res.status(404).json({
-                message : "Resource not found"
-            })
-        }
-
-        res.status(200).json({
-            message : "Resource deleted successfully"
-        })
-
-    } catch(error) {
-
-        res.status(500).json({
-            message : error.message
-        })
-
-    }
-}
-module.exports = {uploadPyq, getPyq, downloadPyq, updatePyq, deletePyq}
+module.exports = {uploadPyq, getPyq, downloadPyq}
 
 
