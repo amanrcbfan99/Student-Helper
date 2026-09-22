@@ -4,8 +4,6 @@ const studentController = require(`../controller/student.controller`)
 const validation = require(`../middleware/student.validation`)
 const auth = require(`../middleware/midddleware.student`)
 const loginlimiter = require(`../middleware/rateLimiter.middleware`)
-// const express = require(`express`)
-// const router = express.Router()
 
 router.post(`/register`,validation.registerValidation, studentController.register)
 router.post(`/login`, loginlimiter.studentLoginLimiter,validation.loginValidation,auth.userAuth, studentController.login)

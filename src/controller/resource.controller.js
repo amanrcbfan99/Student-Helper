@@ -128,8 +128,6 @@ async function getPyq(req, res){
     }
 }
 
-
-
 async function downloadPyq(req, res){
 
     try{
@@ -156,6 +154,7 @@ async function downloadPyq(req, res){
 
         
 }
+
 module.exports = {uploadPyq, getPyq, downloadPyq}
 
 
