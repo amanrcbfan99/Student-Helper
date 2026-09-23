@@ -10,7 +10,7 @@ async function adminInitialization(){
     const isAdminAlreadyExists = await adminModel.findOne({email})
 
     if(isAdminAlreadyExists){
-        return console.log("admin already exists")
+        return 
     }
     const password = process.env.ADMIN_PASSWORD
     const name = process.env.ADMIN_NAME

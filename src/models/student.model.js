@@ -24,7 +24,15 @@ const registerSchema = mongoose.Schema({
     isSuspended : {
         type : Boolean,
         default : false
-    }
+    },
+    savedResources : [{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "pyq"
+    }],
+    favResource : [{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "pyq"
+    }]
 })
 
 const registerModel = mongoose.model("students", registerSchema)
