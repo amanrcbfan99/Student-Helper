@@ -104,6 +104,7 @@ async function  checkCurrentUser(req, res, next){
 
         
     }
+    req.user = user
     next()
 }
 

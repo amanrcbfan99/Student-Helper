@@ -155,6 +155,37 @@ async function downloadPyq(req, res){
         
 }
 
-module.exports = {uploadPyq, getPyq, downloadPyq}
+async function saveResource(req, res){
+
+    try{
+
+        const user = req.user
+        const resourceId = req.params.id
+        const resource = await pyqModel.findById(resourceId)
+        if(!resource){
+            return res.status(404).json({
+                message : "resource not found"
+            })
+        }
+
+        if(user.savedResources.includes(resource._id)){
+            return res.status(400).json({
+                message : "Resource already saved"
+            })
+        }
+        user.savedResources.push(resource._id)
+        await user.save()
+
+        res.status(200).json({
+            message : "Resourve saved successfully"
+        })
+
+    } catch(error){
+        res.status(500).json({
+            error
+        })
+    }
+}
+module.exports = {uploadPyq, getPyq, downloadPyq, saveResource}
 
 
