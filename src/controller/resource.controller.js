@@ -1,4 +1,5 @@
 const { resource } = require("../app")
+const { findById } = require("../models/admin.model")
 const { pyqModel } = require(`../models/resource.model`)
 const ImageKit = require("@imagekit/nodejs")
 
@@ -186,6 +187,7 @@ async function saveResource(req, res){
         })
     }
 }
-module.exports = {uploadPyq, getPyq, downloadPyq, saveResource}
+
+module.exports = {uploadPyq, getPyq, downloadPyq, saveResource, }
 
 
