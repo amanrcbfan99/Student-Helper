@@ -188,6 +188,44 @@ async function saveResource(req, res){
     }
 }
 
-module.exports = {uploadPyq, getPyq, downloadPyq, saveResource, }
+async function addToFav(req, res){
+    
+    try{
+
+    const user = req.user
+    const id = req.params.id
+
+    const resource = await pyqModel.findById(id)
+    if(!resource){
+        return res.status(404).json({
+            message  : "Resource not found"
+        })
+    }
+
+    if(user.favResource.includes(resource._id)){
+        return res.status(409).json({
+            message  : "Resource is already favourate"
+        })
+    }
+    user.favResource.push(resource._id)
+    await user.save()
+
+    res.status(200).json({
+        message : "Resource saved as favourate succussfully",
+        favResources : user.favResource
+    })
+
+
+
+} catch(error){
+    console.log(error)
+
+    res.status(500).json({
+        message: error.message
+    })
+}
+
+}
+module.exports = {uploadPyq, getPyq, downloadPyq, saveResource, addToFav}
 
 
