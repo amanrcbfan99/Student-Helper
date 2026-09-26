@@ -277,4 +277,8 @@ async function resources(req, res){
     const userId = req.user.id
     
 }
+
+async function reportIssue(req, res){
+
+}
 module.exports = {register, login, logout , resetPassword, resetPasswordVerification, changePassword, getProfile, updateProfile,resources}

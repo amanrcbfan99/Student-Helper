@@ -14,4 +14,5 @@ router.post(`/changePassword`,auth.loggedInorNot, studentController.changePasswo
 router.get(`/profile`, auth.loggedInorNot, studentController.getProfile)
 router.patch(`/profile`, auth.loggedInorNot, studentController.updateProfile)
 router.get(`/resource`, auth.userAuth, studentController.resources)
+router.post(`/report`, auth.checkCurrentUser, studentController.reportIssue)
 module.exports = router
