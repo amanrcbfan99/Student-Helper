@@ -4,6 +4,7 @@ const bcrypt = require(`bcrypt`)
 const validation = require(`../middleware/student.validation`)
 const crypto = require("crypto")
 const nodemailer = require("nodemailer")
+const ImageKit = require("@imagekit/nodejs")
 
 async function register(req, res){
 
@@ -278,7 +279,50 @@ async function resources(req, res){
     
 }
 
-async function reportIssue(req, res){
+async function reportIssue(req, res) {
 
+    try {
+
+        const { subject, category, description } = req.body
+        const user = req.user
+
+        let fileUrl = null
+
+        if (req.file) {
+
+            const client = new ImageKit({
+                privateKey: process.env.IMAGEKIT_PRIVATE_KEY
+            })
+
+            const result = await client.files.upload({
+                file: req.file.buffer.toString("base64"),
+                fileName: req.file.originalname
+            })
+
+            fileUrl = result.url
+        }
+
+        const reportGenerate = await reportModel.create({
+            user: user._id,
+            subject,
+            category,
+            description,
+            fileUri: fileUrl
+        })
+
+        res.status(201).json({
+            message: "Report submitted successfully",
+            report: reportGenerate
+        })
+
+    } catch (error) {
+
+        console.log(error)
+
+        res.status(500).json({
+            message: "Something went wrong",
+            error: error.message
+        })
+    }
 }
-module.exports = {register, login, logout , resetPassword, resetPasswordVerification, changePassword, getProfile, updateProfile,resources}
+module.exports = {register, login, logout , resetPassword, resetPasswordVerification, changePassword, getProfile, updateProfile,resources, reportIssue}
