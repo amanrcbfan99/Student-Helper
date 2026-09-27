@@ -274,11 +274,6 @@ async function updateProfile(req, res){
     })
 }
 
-async function resources(req, res){
-    const userId = req.user.id
-    
-}
-
 async function reportIssue(req, res) {
 
     try {
