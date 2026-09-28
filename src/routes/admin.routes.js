@@ -15,4 +15,5 @@ router.patch(`/students/activate/:id`, adminAuthentication.adminAuth, adminContr
 router.delete(`/students/delete/:id`, adminAuthentication.adminAuth, adminController.deleteStudent)
 router.post(`/upload/pyq`, adminAuthentication.adminAuth, uploadMiddleware.upload.single("file"), resourceController.uploadPyq)
 router.get(`/reports`, adminAuthentication.adminAuth, adminController.getAllReports)
+router.patch(`/report/solve/:id`, adminAuthentication.adminAuth, adminController.solveSpecificReport)
 module.exports = router

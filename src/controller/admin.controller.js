@@ -4,6 +4,7 @@ const nodemailer = require("nodemailer")
 const jwt = require(`jsonwebtoken`)
 const studentModel = require(`../models/student.model`)
 const reportModel = require(`../models/report.model`)
+
 async function adminInitialization(){
 
     const email = process.env.ADMIN_EMAIL
@@ -305,7 +306,7 @@ async function countStudent(req, res){
 
 async function getAllReports(req, res){
 
-    const limit = req.query.limit || 20
+    try {const limit = req.query.limit || 20
     const skip = req.query.skip || 0
     const search = req.query.search || ""
 
@@ -331,8 +332,42 @@ async function getAllReports(req, res){
     res.status(200).json({
         message : "Reports fetched successfully",
         reports
-    })
+    })}
+    catch(error){
+        res.status(500).json({
+            error
+        })
+    }
 }
-module.exports = {adminInitialization, adminLogin, getAllstudents, getSpecificStudent, suspendStudent, activateStudent, deleteStudent, countStudent, getAllReports};
+
+async function solveSpecificReport(req, res){
+
+    try{
+        
+    const updateReport = req.body
+    const id = req.params.id
+
+    const report = await reportModel.findById(id)
+    if(!report){
+        return res.status(404).json({
+            message : "Report not found"
+        })
+    }
+
+    report.status = updateReport.updatedStatus
+    await report.save()
+
+    res.status(200).json({
+        message : "Report updated successfully",
+        Updated_Report : report
+    })}
+    catch(error){
+        res.status(500).json({
+            error
+        })
+    }
+
+}
+module.exports = {adminInitialization, adminLogin, getAllstudents, getSpecificStudent, suspendStudent, activateStudent, deleteStudent, countStudent, getAllReports, solveSpecificReport};
 
 
