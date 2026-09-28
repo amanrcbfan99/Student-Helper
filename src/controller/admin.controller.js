@@ -303,6 +303,36 @@ async function countStudent(req, res){
     }
 }
 
-module.exports = {adminInitialization, adminLogin, getAllstudents, getSpecificStudent, suspendStudent, activateStudent, deleteStudent, countStudent, };
+async function getAllReports(req, res){
+
+    const limit = req.query.limit || 20
+    const skip = req.query.skip || 0
+    const search = req.query.search || ""
+
+    if(limit > 50){
+        return res.status(400).json({
+            message : "Maximum 50 reports can be fetched in on time"
+        })
+    }
+
+    const reports = await reportModel.find({
+        $or : [
+            {Category : {
+                $regex  : search,
+                $options : "i"
+            }}, 
+            {status : {
+                $regex : search,
+                $options : "i"
+            }}
+        ]
+    }).limit(limit).skip(skip)
+
+    res.status(200).json({
+        message : "Reports fetched successfully",
+        reports
+    })
+}
+module.exports = {adminInitialization, adminLogin, getAllstudents, getSpecificStudent, suspendStudent, activateStudent, deleteStudent, countStudent, getAllReports};
 
 
