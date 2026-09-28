@@ -4,6 +4,7 @@ const studentController = require(`../controller/student.controller`)
 const validation = require(`../middleware/student.validation`)
 const auth = require(`../middleware/midddleware.student`)
 const loginlimiter = require(`../middleware/rateLimiter.middleware`)
+const uploadMiddleware = require(`../middleware/upload.middleware`)
 
 router.post(`/register`,validation.registerValidation, studentController.register)
 router.post(`/login`, loginlimiter.studentLoginLimiter,validation.loginValidation,auth.userAuth, studentController.login)
@@ -13,6 +14,5 @@ router.post(`/resetPasswordVerification`, studentController.resetPasswordVerific
 router.post(`/changePassword`,auth.loggedInorNot, studentController.changePassword)
 router.get(`/profile`, auth.loggedInorNot, studentController.getProfile)
 router.patch(`/profile`, auth.loggedInorNot, studentController.updateProfile)
-router.get(`/resource`, auth.userAuth, studentController.resources)
-router.post(`/report`, auth.checkCurrentUser, studentController.reportIssue)
+router.post(`/report`, auth.checkCurrentUser,  uploadMiddleware.upload.single("reportFile"), studentController.reportIssue)
 module.exports = router

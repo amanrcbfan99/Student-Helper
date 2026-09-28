@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt")
 const nodemailer = require("nodemailer")
 const jwt = require(`jsonwebtoken`)
 const studentModel = require(`../models/student.model`)
-
+const reportModel = require(`../models/report.model`)
 async function adminInitialization(){
 
     const email = process.env.ADMIN_EMAIL
@@ -302,4 +302,7 @@ async function countStudent(req, res){
         })
     }
 }
-module.exports = {adminInitialization, adminLogin, getAllstudents, getSpecificStudent, suspendStudent, activateStudent, deleteStudent, countStudent};
+
+module.exports = {adminInitialization, adminLogin, getAllstudents, getSpecificStudent, suspendStudent, activateStudent, deleteStudent, countStudent, };
+
+

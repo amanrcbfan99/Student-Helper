@@ -5,6 +5,7 @@ const validation = require(`../middleware/student.validation`)
 const crypto = require("crypto")
 const nodemailer = require("nodemailer")
 const ImageKit = require("@imagekit/nodejs")
+const reportModel = require(`../models/report.model`)
 
 async function register(req, res){
 
@@ -278,7 +279,7 @@ async function reportIssue(req, res) {
 
     try {
 
-        const { subject, category, description } = req.body
+        const { Subject, Description, Category } = req.body
         const user = req.user
 
         let fileUrl = null
@@ -299,9 +300,9 @@ async function reportIssue(req, res) {
 
         const reportGenerate = await reportModel.create({
             user: user._id,
-            subject,
-            category,
-            description,
+            Subject,
+            Category,
+            Description,
             fileUri: fileUrl
         })
 
@@ -312,12 +313,10 @@ async function reportIssue(req, res) {
 
     } catch (error) {
 
-        console.log(error)
-
         res.status(500).json({
             message: "Something went wrong",
             error: error.message
         })
     }
 }
-module.exports = {register, login, logout , resetPassword, resetPasswordVerification, changePassword, getProfile, updateProfile,resources, reportIssue}
+module.exports = {register, login, logout , resetPassword, resetPasswordVerification, changePassword, getProfile, updateProfile, reportIssue}
