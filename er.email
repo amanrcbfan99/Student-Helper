@@ -1,0 +1,7 @@
+[33mcommit f701e3ce638d1c91de50ba016c621faf1169286e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author:     amanrcbfan99 <amanrcbfan99@gmail.com>
+AuthorDate: Mon Sep 28 20:58:40 2026 +0530
+Commit:     amanrcbfan99 <amanrcbfan99@gmail.com>
+CommitDate: Mon Sep 28 20:58:40 2026 +0530
+
+    feat(report): implement status update endpoint
