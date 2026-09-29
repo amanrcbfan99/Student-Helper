@@ -367,6 +367,7 @@ async function listOwnBook(req, res){
     seller: user._id
 })
 
+
     if (bookAlreadyListedBySameUser) {
         return res.status(400).json({
             message: "You cannot list the same book again"
