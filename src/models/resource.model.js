@@ -1,3 +1,4 @@
+const { number } = require("joi")
 const mongoose = require(`mongoose`)
 
 const pyqSchema = new mongoose.Schema({
@@ -9,7 +10,7 @@ const pyqSchema = new mongoose.Schema({
     isPremium : {
         type : Boolean,
         default : false
-    }
+    },
 })
 
 

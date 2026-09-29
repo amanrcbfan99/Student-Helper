@@ -6,6 +6,7 @@ const crypto = require("crypto")
 const nodemailer = require("nodemailer")
 const ImageKit = require("@imagekit/nodejs")
 const reportModel = require(`../models/report.model`)
+const bookModel = require(`../models/book.model`)
 
 async function register(req, res){
 
@@ -319,4 +320,78 @@ async function reportIssue(req, res) {
         })
     }
 }
-module.exports = {register, login, logout , resetPassword, resetPasswordVerification, changePassword, getProfile, updateProfile, reportIssue}
+
+async function listOwnBook(req, res){
+
+  try {
+    
+    const { bookName, printedPrice, sellingPrice, publication, bestFor} = req.body
+    const user = req.user
+
+    if(sellingPrice > printedPrice){
+        return res.status(400).json({
+            message : "Selling price should not be greater than printed price...!"
+        })
+    }
+
+    if (printedPrice <= 0 || sellingPrice <= 0) {
+    return res.status(400).json({
+        message: "Price should be greater than 0"
+    })
+}
+
+    if (!req.file) {
+        return res.status(400).json({
+            message: "Book image is required"
+        })
+    }
+    let fileUrl = null
+
+        if (req.file) {
+
+            const client = new ImageKit({
+                privateKey: process.env.IMAGEKIT_PRIVATE_KEY
+            })
+
+            const result = await client.files.upload({
+                file: req.file.buffer.toString("base64"),
+                fileName: req.file.originalname
+            })
+
+            fileUrl = result.url
+        }
+
+
+    const bookAlreadyListedBySameUser = await bookModel.findOne({
+    bookName,
+    seller: user._id
+})
+
+    if (bookAlreadyListedBySameUser) {
+        return res.status(400).json({
+            message: "You cannot list the same book again"
+        })
+    }
+
+    const listBook = await bookModel.create({
+    bookName,
+    printedPrice,
+    sellingPrice,
+    image: fileUrl,
+    publication,
+    bestFor,
+    seller: user._id
+})
+
+    res.status(201).json({
+        message : "book listed successfully"
+    })
+
+} catch(error){
+    res.status(500).json({
+    error: error.message
+})
+}
+
+}
+module.exports = {register, login, logout , resetPassword, resetPasswordVerification, changePassword, getProfile, updateProfile, reportIssue, listOwnBook}
