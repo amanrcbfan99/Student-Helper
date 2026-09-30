@@ -370,7 +370,7 @@ async function listOwnBook(req, res){
 
     if (bookAlreadyListedBySameUser) {
         return res.status(400).json({
-            message: "You cannot list the same book again"
+            message: "You can't list the same book again"
         })
     }
 
@@ -395,4 +395,89 @@ async function listOwnBook(req, res){
 }
 
 }
-module.exports = {register, login, logout , resetPassword, resetPasswordVerification, changePassword, getProfile, updateProfile, reportIssue, listOwnBook}
+
+async function booksToSell(req, res){
+
+    try{
+    
+    const limit = Number(req.query.limit) || 20
+    const skip = Number(req.query.skip) || 0
+    const search = req.query.search
+
+    if(limit > 20){
+        return res.status(400).json({
+            message : "You cannot fetch more than 20 books in one time"
+        })
+    }
+
+    const filter = {}
+    
+    if(!search){
+    const allBooks = await bookModel
+    .find()
+    .limit(limit)
+    .skip(skip)
+        
+    
+
+
+    if(allBooks.length < 1){
+        return res.status(404).json({
+            message : "Books not found"
+        })
+    }
+
+    res.status(200).json({
+        message : "Books fetched successfully",
+        Books : allBooks
+    })}
+
+    if(search){
+        filter.$or = [
+            {
+                bookName : {
+                    $regex : search,
+                    $options : "i"
+                } 
+            },
+
+            {
+               publication : {
+                    $regex : search,
+                    $options : "i"
+               } 
+            },
+            {
+                bestFor : {
+                    $regex : search,
+                    $options : "i"
+                }
+            }
+        ]
+
+
+    const books = await bookModel
+    .find(filter)
+    .limit(limit)
+    .skip(skip)
+
+    if(books.length < 1){
+        return res.status(404).json({
+            message : "Books not found"
+        })
+    }
+
+    res.status(200).json({
+        message : "Books fetched successfully",
+        Books : books
+    })
+}
+
+
+} catch(error){
+    res.status(500).json({
+        message : error.message
+    })
+}
+}
+module.exports = {register, login, logout , resetPassword, resetPasswordVerification, changePassword, getProfile, updateProfile, reportIssue, listOwnBook, booksToSell}

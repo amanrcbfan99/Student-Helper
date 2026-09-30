@@ -16,4 +16,5 @@ router.get(`/profile`, auth.loggedInorNot, studentController.getProfile)
 router.patch(`/profile`, auth.loggedInorNot, studentController.updateProfile)
 router.post(`/report`, auth.checkCurrentUser,  uploadMiddleware.upload.single("reportFile"), studentController.reportIssue)
 router.post(`/book/add`, auth.checkCurrentUser, uploadMiddleware.upload.single("bookImage"), studentController.listOwnBook)
+router.get(`/books`, auth.checkCurrentUser, studentController.booksToSell)
 module.exports = router
